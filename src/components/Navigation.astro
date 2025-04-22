@@ -1,0 +1,225 @@
+---
+import { Image } from "astro:assets";
+import floppy from "../assets/floppylogo.png";
+import floppyLogo from "../assets/nav-floppy.png";
+import blog from "../assets/nav-blog.png";
+import projects from "../assets/nav-projects.png";
+import moon from "../assets/moon.svg";
+import sun from "../assets/sun.svg";
+import github from "../assets/github.svg";
+import bsky from "../assets/bsky.svg";
+import { SocialIcon } from 'react-social-icons'
+// import Search from "astro-pagefind/components/Search";
+// import Search2 from "../components/Search2.astro";
+
+const links = [
+  { url: "/notes", label: "Notes", image: blog },
+  { url: "/blog", label: "Blog", image: projects },
+  { url: "/projects", label: "Projects", image: github },
+  { url: "/me", label: "About", image: floppy },
+];
+
+const socialLinks = [
+  { url: "https://github.com/taniarascia", svg: github },
+  { url: "https://bsky.app/profile/tania.dev", svg: bsky },
+];
+---
+
+<header class="navbar">
+  <div class="navbar-title">
+    <div class="navbar-title-content">
+      <a href="/" class="navbar-title-link">
+        <span>
+          <Image
+            src={floppyLogo}
+            class="sidebar-logo"
+            alt="tania.dev"
+            width={24}
+            height={24}
+          />
+        </span>
+        <span>tania.dev</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="navbar-wrapper">
+    <div class="navbar-container">
+      <section class="navbar-section navbar-section-search"></section>
+      <section class="navbar-section">
+        <button class="navbar-button nav-menu-button" aria-label="Toggle Menu">
+          <svg
+            id="menu-icon"
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path
+              fill="currentColor"
+              d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+          </svg>
+          <svg
+            id="close-icon"
+            class="close-icon hidden"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path
+              fill="currentColor"
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+            ></path>
+          </svg>
+        </button>
+
+        <nav class="navbar-menu nav-items">
+          <!-- <Search2/> -->
+          {
+            links.map((link) => (
+              <a href={link.url} class="nav-link">
+                <Image
+                  src={link.image}
+                  alt={link.label}
+                  width={20}
+                  height={20}
+                />
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+        <!-- <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} /> -->
+        <nav class="navbar-menu social">
+          <button
+            class="navbar-button theme-switch-button"
+            aria-label="Toggle Theme"
+          >
+            <span class="icon-sun">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </span>
+
+            <span class="icon-moon hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+            </span>
+          </button>
+       
+          {
+            socialLinks.map((link) => (
+              <SocialIcon
+                target="_blank"
+                key={link.url}
+                url={link.url}
+                fgColor="currentColor"
+                bgColor="transparent"
+                className="navbar-icon"
+              />
+            ))
+          }
+          <!-- {
+            socialLinks.map((link) => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="navbar-icon">
+                <Image src={link.svg} alt="Social Icon" width={24} height={24} />
+              </a>
+            ))
+          } -->
+        </nav>
+      </section>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  const menuButton = document.querySelector(".nav-menu-button");
+  const navItems = document.querySelector(".nav-items");
+  const menuIcon = document.getElementById("menu-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  let isNavOpen = false;
+
+  menuButton?.addEventListener("click", () => {
+    isNavOpen = !isNavOpen;
+    navItems?.classList.toggle("active");
+    menuButton.classList.toggle("active");
+    menuIcon?.classList.toggle("hidden");
+    closeIcon?.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (isNavOpen && !e.target.closest(".navbar-section")) {
+      isNavOpen = false;
+      navItems?.classList.remove("active");
+      menuButton?.classList.remove("active");
+      menuIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+    }
+  });
+
+  const iconSun = document.querySelector(".icon-sun");
+  const iconMoon = document.querySelector(".icon-moon");
+  const themeButton = document.querySelector(".theme-switch-button");
+
+  const handleUpdateTheme = (newTheme) => {
+    const html = document.documentElement;
+    localStorage.setItem("theme", newTheme);
+    html.style.setProperty("color-scheme", newTheme);
+    html.classList.toggle("is-dark", newTheme === "dark");
+    html.classList.toggle("is-light", newTheme === "light");
+  };
+
+  const updateIcons = (theme) => {
+    iconSun?.classList.toggle("hidden", theme !== "dark");
+    iconMoon?.classList.toggle("hidden", theme === "dark");
+  };
+
+  const initialTheme = localStorage.getItem("theme") || "light";
+  handleUpdateTheme(initialTheme);
+  updateIcons(initialTheme);
+
+  themeButton?.addEventListener("click", () => {
+    const currentTheme = document.documentElement.classList.contains("is-dark")
+      ? "dark"
+      : "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    handleUpdateTheme(newTheme);
+    updateIcons(newTheme);
+  });
+</script>

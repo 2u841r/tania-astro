@@ -1,0 +1,56 @@
+---
+import { getFormattedDate } from '../utils/helpers'
+import Post from './Post.astro'
+
+const {
+  data = [],
+  showYears,
+  query,
+  prefix,
+  hideDate,
+  yearOnly,
+  ...props
+} = Astro.props
+
+const postsByYear = {}
+for (const post of data) {
+  const year = new Date(post.frontmatter.date).getFullYear()
+  if (!postsByYear[year]) postsByYear[year] = []
+  postsByYear[year].push(post)
+}
+const years = Object.keys(postsByYear).reverse()
+---
+
+{showYears ? (
+  <>
+    {years.map((year) => (
+      <section class="year">
+        <h2>{year}</h2>
+        <div class="posts">
+          {postsByYear[year].map((node) => (
+            <Post 
+              key={node.slug} 
+              node={node} 
+              query={query} 
+              prefix={prefix}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+  </>
+) : (
+  <div class={props.newspaper ? 'posts newspaper' : 'posts'}>
+    {data.map((node) => (
+      <Post 
+        key={node.slug} 
+        node={node} 
+        query={query} 
+        prefix={prefix} 
+        hideDate={hideDate} 
+        yearOnly={yearOnly} 
+        {...props} 
+      />
+    ))}
+  </div>
+)}

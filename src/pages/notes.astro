@@ -1,0 +1,30 @@
+---
+import Hero from '../components/Hero.astro';
+import Search from '../components/Search.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import Layout from '../layouts/Layout.astro';
+import blog from '../assets/nav-blog.png';
+
+const title = 'Notes';
+const description = 'Personal notes about life, music, projects, and everything else.';
+
+const allPosts = Object.entries(
+  import.meta.glob('../pages/content/*.md', { eager: true })
+).map(([path, post]) => ({
+  ...post,
+  slug: path
+    .replace('../pages/content/', '/')
+    .replace('.md', ''),
+}));
+
+const personalPosts = allPosts.filter(
+  (post) => post.frontmatter?.categories === 'Personal'
+);
+---
+
+<Layout>
+  <PageLayout>
+    <Hero title={title} description={description} hasSearch={true} image={blog} />
+    <Search data={personalPosts} section="notes" />
+  </PageLayout>
+</Layout>

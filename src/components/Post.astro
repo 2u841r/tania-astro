@@ -1,0 +1,37 @@
+---
+import { getFormattedDate, isNewPost } from '../utils/helpers';
+
+const { node, prefix, newspaper, query } = Astro.props;
+
+const rawDate = node.frontmatter?.date || node.date;
+const formattedDate = rawDate ? getFormattedDate(rawDate, newspaper ? 2 : 1) : '';
+const newPost = isNewPost(rawDate);
+
+function highlightTitle(title, query) {
+  if (!query) return title;
+
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(escapedQuery, 'i');
+  const match = title.match(re);
+  if (!match) return title;
+
+  const start = match.index;
+  const end = start + match[0].length;
+
+  const before = title.slice(0, start);
+  const found = title.slice(start, end);
+  const after = title.slice(end);
+
+  return `${before}<strong class="searched">${found}</strong>${after}`;
+}
+
+const highlightedTitle = highlightTitle(node.frontmatter?.title || '', query);
+const href = prefix ? `/${prefix}${node.slug}` : node.slug;
+---
+<a href={href} class="post">
+  <div>
+    {newPost && <div class="button x-small">✨ New</div>}
+    <span set:html={highlightedTitle} />
+  </div>
+  <time>{formattedDate}</time>
+</a>

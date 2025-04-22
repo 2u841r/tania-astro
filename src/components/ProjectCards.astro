@@ -1,0 +1,78 @@
+---
+import { projectsList } from "../data/projectsList.js";
+---
+
+<div class="cards" id="projects">
+  {
+    projectsList.map((project) => (
+      <div class="card" data-slug={project.slug}>
+        <div class="stars">
+          <div class="star" hidden>
+            <a
+              href={`https://github.com/taniarascia/${project.slug}/stargazers`}
+            >
+              <span class="star-count">0</span>
+            </a>
+            ⭐
+          </div>
+        </div>
+
+        <time>{project.date}</time>
+        <a
+          class="card-header"
+          href={`https://github.com/taniarascia/${project.slug}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {project.name}
+        </a>
+        <p>{project.tagline}</p>
+
+        <div class="card-links">
+          {project.writeup && (
+            <a class="button small" href={project.writeup}>
+              Article
+            </a>
+          )}
+          {project.url && (
+            <a
+              class="button small"
+              href={project.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Demo
+            </a>
+          )}
+          <a
+            class="button small"
+            href={`https://github.com/taniarascia/${project.slug}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Source
+          </a>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script type="module">
+  const response = await fetch(
+    "https://api.github.com/users/taniarascia/repos?per_page=100"
+  );
+  const repos = await response.json();
+
+  document.querySelectorAll("[data-slug]").forEach((card) => {
+    const slug = card.dataset.slug;
+    const repo = repos.find((r) => r.name === slug);
+
+    if (repo && repo.stargazers_count > 0) {
+      const starContainer = card.querySelector(".star");
+      const starCount = card.querySelector(".star-count");
+      starCount.textContent = repo.stargazers_count.toLocaleString();
+      starContainer.hidden = false;
+    }
+  });
+</script>

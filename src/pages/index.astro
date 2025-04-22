@@ -1,0 +1,171 @@
+---
+import { late } from "astro:schema";
+import Heading from "../components/Heading.astro";
+import Hero from "../components/Hero.astro";
+import Posts from "../components/Posts.astro";
+import { projectsList } from "../data/projectsList";
+import Layout from "../layouts/Layout.astro";
+import PageLayout from "../layouts/PageLayout.astro";
+
+// Load all markdown files
+const allPosts = Object.values(await import.meta.glob('./content/*.md', { eager: true }));
+
+function filterAndSort1(posts, category, limit = 3) {
+  const filtered = posts
+    .filter(post => {
+      const categories = post.frontmatter?.categories || [];
+      return post.frontmatter?.template === 'post' && categories.includes(category);
+    })
+    .sort((a, b) => 
+      new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+    )
+    .slice(0, limit)
+    .map(post => ({
+      title: post.frontmatter.title,
+      date: post.frontmatter.date,
+      description: post.frontmatter.description,
+      slug: post.frontmatter.slug
+    }));
+
+  return filtered;
+}
+
+// src/utils/filterAndSortPosts.ts
+export function filterAndSortPosts(posts, { category, template = 'post', limit }) {
+  return posts
+    .filter(
+      (post) =>
+        post.frontmatter.template === template &&
+        post.frontmatter.categories === category
+    )
+    .sort(
+      (a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date)
+    )
+    .slice(0, limit || posts.length)
+}
+
+const latestNotes = filterAndSortPosts(allPosts, { category: 'Personal', limit: 3 })
+const latestTechnicalArticles = filterAndSortPosts(allPosts, { category: 'Technical', limit: 3 })
+const highlights = filterAndSortPosts(allPosts, { category: 'Highlight', limit: 12 })
+
+---
+
+<Layout>
+  <PageLayout>
+    <Hero title="Hey, I'm Tania!" type="index">
+      <div class="hero-wrapper">
+        <div>
+          <p class="hero-description">
+            I'm a software engineer, open-source creator, and former
+            professional chef. I've been making websites since 1998 and{" "}
+            <a href="/blog">writing on this blog</a> for the past decade.
+          </p>
+          <p class="hero-description">
+            I enjoy weight-lifting, reading sci-fi and fantasy, playing retro
+            video games, and spending time with my partner and friends.
+          </p>
+          <p class="flex gap">
+            <a class="button" href="/me"> About Me </a>
+            <a
+              class="button"
+              href="https://taniarascia.substack.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Newsletter
+            </a>
+          </p>
+        </div>
+        <div>
+          <img src="/ram.png" class="hero-image" alt="RAM Ram" />
+        </div>
+      </div>
+    </Hero>
+
+    <section class="section-index">
+      <Heading 
+        title="Notes" 
+        slug="/notes" 
+        buttonText="View All"
+		 description="Personal notes about life, music, projects, and everything else."
+      />
+      {latestNotes.length > 0 ? (
+        <Posts data={latestNotes} newspaper={true} />
+      ) : (
+        <p>No personal posts found</p>
+      )}
+    </section>
+
+    <section class="section-index">
+      <Heading 
+        title="Tech Blogs" 
+        slug="/blog" 
+        buttonText="View All"
+		description="Guides, references, and tutorials."
+      />
+      {latestTechnicalArticles.length > 0 ? (
+        <Posts data={latestTechnicalArticles} newspaper={true} />
+      ) : (
+        <p>No technical posts found</p>
+      )}
+    </section>
+
+    <section class="section-index">
+      <Heading 
+        title="Deep Dives" 
+        slug="/topics" 
+        buttonText="All Topics"
+		description="Long-form tutorials on a variety of development topics."
+      />
+      {highlights.length > 0 ? (
+        <Posts data={highlights} newspaper={true} />
+      ) : (
+        <p>No highlight posts found</p>
+      )}
+    </section>
+
+    <section>
+      <Heading
+        title="Projects"
+        slug="/projects"
+        buttonText="All Projects"
+        description="Open-source projects I've worked on over the years."
+      />
+
+      <div class="cards">
+        {projectsList
+          .filter((project) => project.highlight)
+          .map((project) => {
+            return (
+              <div class="card" key={`hightlight-${project.slug}`}>
+                <time>{project.date}</time>
+                <a
+                  href={`https://github.com/taniarascia/${project.slug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {project.name}
+                </a>
+                <p>{project.tagline}</p>
+                <div class="card-links">
+                  {project.writeup && (
+                    <a class="button small" href={project.writeup}>
+                      Article
+                    </a>
+                  )}
+                  <a
+                    class="button small"
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Demo
+                  </a>
+                </div>
+              </div>
+            )
+          })}
+      </div>
+    </section>
+  </PageLayout>
+</Layout>

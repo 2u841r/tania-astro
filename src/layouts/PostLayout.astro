@@ -1,0 +1,14 @@
+---
+import PostSidebar from '../components/PostSidebar.astro'
+
+const { post } = Astro.props
+const { tags, date, thumbnail } = post.frontmatter
+const toc = post.tableOfContents
+console.log('__________________________________')
+console.log(toc)
+---
+
+<main class="main-content" data-pagefind-body>
+  <slot />
+</main>
+<PostSidebar thumbnail={thumbnail} date={date} tags={tags} toc={toc} />

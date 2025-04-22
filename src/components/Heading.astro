@@ -1,0 +1,17 @@
+---
+const { title, slug, buttonText, description } = Astro.props;
+---
+
+<header class="heading">
+  <h2>
+    {title}
+    {
+      slug && (
+        <a class="small" href={slug}>
+          {buttonText}
+        </a>
+      )
+    }
+  </h2>
+  {description && <div class="description">{description}</div>}
+</header>

@@ -1,0 +1,75 @@
+---
+// Astro frontmatter
+import searchIcon from '../assets/nav-search.png'
+import Posts from './Posts.astro'
+
+const { data = [], section = '' } = Astro.props
+---
+
+<div class="search-container">
+  <input
+    id="search"
+    type="search"
+    class="searchbar"
+    placeholder="Search posts..."
+    autocomplete="off"
+  />
+  <img
+    class="search-icon"
+    src={searchIcon.src}
+    alt="Search"
+    onclick="document.getElementById('search').focus()"
+  />
+</div>
+
+<div id="results" class="search-results">
+  <Posts data={data} showYears/>
+</div>
+
+<script type="module">
+  const data = JSON.parse(document.getElementById('search-data').textContent);
+  const input = document.getElementById('search');
+  const resultsContainer = document.getElementById('results');
+
+  function normalize(str) {
+  return (str || '').toLowerCase().replace(/\s+/g, ' ');
+}
+
+  input.addEventListener('input', (e) => {
+    const query = normalize(e.target.value);
+    let filtered = [];
+
+    if (query) {
+      filtered = data.filter((post) =>
+        normalize(post.title).includes(query)
+      );
+    }
+
+    resultsContainer.innerHTML = '';
+
+    if (query && filtered.length === 0) {
+      const message = document.createElement('p');
+      message.textContent = 'Sorry, nothing matched that search.';
+      message.style.marginTop = '2rem';
+      resultsContainer.appendChild(message);
+      return;
+    }
+
+    const section = document.createElement('section');
+    for (const post of query ? filtered : data) {
+      const item = document.createElement('div');
+      item.className = 'post-preview';
+      item.innerHTML = `
+        <a href="${post.slug}">
+          <h3>${post.title}</h3>
+          <p>${post.date}</p>
+        </a>
+      `;
+      section.appendChild(item);
+    }
+    resultsContainer.appendChild(section);
+  });
+</script>
+
+<!-- Embed data safely -->
+<script type="application/json" id="search-data" set:html={JSON.stringify(data)}></script>

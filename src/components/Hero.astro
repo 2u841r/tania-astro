@@ -1,0 +1,45 @@
+---
+const {
+  highlight,
+  subTitle,
+  title,
+  description,
+  children,
+  type = "page",
+  breadcrumb,
+  hasSearch,
+} = Astro.props;
+---
+
+<header
+  class={`hero hero-${type}`}
+  style={hasSearch ? { marginBottom: "1.5rem" } : {}}
+>
+  {
+    subTitle && (
+      <div class="sub-title">
+        {breadcrumb && (
+          <div>
+            <a href={breadcrumb.value}>{breadcrumb.label}</a> /
+          </div>
+        )}
+        <div>
+          {highlight && <span class="highlight">{highlight}</span>}
+          <span>{subTitle}</span>
+        </div>
+      </div>
+    )
+  }
+  {title && <h1>{title}</h1>}
+  {
+    description && (
+      <div
+        class="hero-description"
+        style={hasSearch ? { marginBottom: "0" } : {}}
+      >
+        {description}
+      </div>
+    )
+  }
+  <slot />
+</header>

@@ -1,0 +1,56 @@
+---
+import { slugify } from '../utils/helpers.js'
+
+const { thumbnail, toc, tags = [], date } = Astro.props
+console.log(thumbnail)
+---
+
+<aside class="post-sidebar">
+  <div class="post-sidebar-content">
+    {thumbnail && (
+      <div class="post-sidebar-thumbnail">
+        <img src={thumbnail} alt="Thumbnail" loading="lazy" />
+      </div>
+    )}
+
+    <section class="post-sidebar-section">
+      <h2>Published</h2>
+      <div class="post-sidebar-offset">
+        <p>{date}</p>
+        <p><a href="#comments">View Comments</a></p>
+      </div>
+    </section>
+
+    {tags.length > 0 && (
+      <section class="post-sidebar-section">
+        <h2>Topics</h2>
+        <div class="post-sidebar-offset">
+          <div class="tags">
+            {tags.map(tag => (
+              <a
+                class="button small"
+                href={`/topics/${slugify(tag)}`}
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {toc && (
+      <section class="post-sidebar-section">
+        <h2>In This Article</h2>
+        <nav class="table-of-contents">
+          <ul>
+            <li>
+              <a href="#introduction">Introduction</a>
+            </li>
+          </ul>
+          <div set:html={toc} />
+        </nav>
+      </section>
+    )}
+  </div>
+</aside>

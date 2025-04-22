@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageLayout from "../layouts/PageLayout.astro";
+import PostLayout from "../layouts/PostLayout.astro";
+
+// getStaticPaths for static generation
+export async function getStaticPaths() {
+  const rawPosts = Object.values(
+    import.meta.glob("./content/**/*.md", { eager: true })
+  );
+
+  const posts = rawPosts.filter(
+    (post) => post?.frontmatter?.slug
+  );
+
+  return posts.map((post: any) => ({
+    params: {
+      slug: post.frontmatter.slug,
+    },
+    props: { post },
+  }));
+}
+
+
+// Get post from props
+const { post } = Astro.props;
+const { Content } = await post;
+console.log("*************")
+console.log(post.frontmatter.thumbnail)
+const { title, date, description, tags, categories } = post.frontmatter;
+---
+
+<Layout>
+  {
+    post.frontmatter.template === "page" ? (
+      <PageLayout>
+        <Content />
+      </PageLayout>
+    ) : (
+      <PostLayout post={post}>
+        <article class="post-content">
+          <header class="post-header">
+            <h1>{title}</h1>
+            {date && (
+              <time datetime={date}>
+                {new Date(date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+            )}
+          </header>
+        </article>
+
+        <div class="content">
+          <Content />
+        </div>
+      </PostLayout>
+    )
+  }
+</Layout>
+

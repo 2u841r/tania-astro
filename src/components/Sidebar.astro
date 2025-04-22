@@ -1,0 +1,119 @@
+---
+import floppy from '../assets/floppylogo.png';
+import floppyLogo from '../assets/nav-floppy.png';
+
+import react from '../assets/thumbnails/react.png';
+import css from '../assets/thumbnails/css-new.png';
+import js from '../assets/thumbnails/js.png';
+import mac from '../assets/thumbnails/apple.png';
+import mario from '../assets/thumbnails/mario.png';
+import tn from '../assets/thumbnails/tn.png';
+import accordion from '../assets/thumbnails/keyboardaccordionlogo.png';
+import animorphs from '../assets/thumbnails/animorphslogo.png';
+import pc from '../assets/thumbnails/computer.png';
+import bluesky from '../assets/thumbnails/bluesky.png';
+import rss from '../assets/thumbnails/rss.png';
+
+const guides = [
+  { url: '/setting-up-a-brand-new-mac-for-development', title: 'macOS Setup for Devs', icon: mac },
+  { url: '/overview-of-css-concepts/', title: 'CSS Guidebook', icon: css },
+  { url: '/react-architecture-directory-structure', title: 'React Architecture', icon: react },
+  { url: '/asynchronous-javascript-event-loop-callbacks-promises-async-await/', title: 'The Event Loop', icon: js },
+  { url: '/topics', title: 'All Topics' }
+];
+
+const projectWriteups = [
+  { url: '/musical-instrument-web-audio-api', title: 'Keyboard Accordion', icon: accordion },
+  { url: '/how-to-create-a-memory-game-super-mario-with-plain-javascript', title: 'SNES Memory Game', icon: mario },
+  { url: '/writing-an-emulator-in-javascript-chip8/', title: 'Chip-8 Emulator', icon: js },
+  { url: '/building-takenote', title: 'TakeNote App', icon: tn }
+];
+
+const funStuff = [
+  { url: '/animorphs', title: 'The Lore of Animorphs', icon: animorphs },
+  { url: '/building-my-first-pc/', title: 'Building My First PC', icon: pc }
+];
+---
+
+<aside class="sidebar">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-title">
+      <a href="/" class="sidebar-title-link">
+        <span>
+          <img src={floppyLogo.src} class="sidebar-logo" alt="tania.dev" title="💾" />
+        </span>
+        <span>tania.dev</span>
+      </a>
+    </div>
+
+    <div class="sidebar-container">
+      <section class="sidebar-section">
+        <h2>About Me</h2>
+        <div class="sidebar-content">
+          <p>
+            I'm <a href="/me">Tania</a>, software engineer and open-source creator.
+            This is my digital garden. 🌱
+          </p>
+        </div>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Stay Connected</h2>
+        <p class="sidebar-links">
+          <a href="https://taniarascia.substack.com" target="_blank" rel="noopener noreferrer">
+            <img src={floppy.src} alt="Email Newsletter" />
+            Newsletter
+          </a>
+          <a href="https://go.bsky.app/SmEWb8G" target="_blank" rel="noopener noreferrer">
+            <img src={bluesky.src} alt="Bluesky" />
+            Bluesky Starter Pack
+          </a>
+          <a href="/rss.xml">
+            <img src={rss.src} alt="RSS" />
+            RSS Feed
+          </a>
+        </p>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Guides</h2>
+        <nav class="sidebar-menu">
+          {guides.map(link => (
+            <a href={link.url}>
+              {link.icon ? (
+                <img src={link.icon.src} alt={link.title} />
+              ) : (
+                <div style="height: 16px; width: 16px;"></div>
+              )}
+              {link.title}
+            </a>
+          ))}
+        </nav>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Project Writeups</h2>
+        <nav class="sidebar-menu">
+          {projectWriteups.map(link => (
+            <a href={link.url}>
+              {link.icon && <img src={link.icon.src} alt={link.title} />}
+              {link.title}
+            </a>
+          ))}
+        </nav>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Fun Stuff</h2>
+        <nav class="sidebar-menu">
+          {funStuff.map(link => (
+            <a href={link.url}>
+              {link.icon && <img src={link.icon.src} alt={link.title} />}
+              {link.title}
+            </a>
+          ))}
+        </nav>
+      </section>
+    </div>
+  </div>
+</aside>

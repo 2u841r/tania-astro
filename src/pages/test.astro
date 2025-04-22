@@ -1,0 +1,21 @@
+---
+import { getCollection, getEntry } from "astro:content";
+
+// Get all entries from a collection.
+// Requires the name of the collection as an argument.
+const notes = await getCollection("notes", ({ data }) => {
+  return data.categories == 'Personal';
+});
+---
+<h1> test </h1>
+{
+  notes.map((note) => {
+    return (
+      <div>
+        <h2>{note.data.title}</h2>
+        <p>{note.data.description}</p>
+        <a href={note.filePath}> read </a>
+      </div>
+    );
+  })
+}

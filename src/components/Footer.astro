@@ -1,0 +1,57 @@
+---
+import netlify from "../assets/netlify.png";
+import astro from "../assets/astroLogo.svg";
+// import astroCssLogo from "../styles/astroLogo.css"; // devicon
+import github from "../assets/nav-github.png";
+import { Image } from "astro:assets";
+
+const links = [
+  { url: "https://taniarascia.substack.com", label: "Email signup" },
+  { url: "https://www.taniarascia.com/rss.xml", label: "RSS feed" },
+  { url: "https://bsky.app/profile/tania.dev", label: "Bluesky" },
+  { url: "https://ko-fi.com/taniarascia", label: "Buy me a coffee" },
+];
+const madeWithLinks = [
+  { url: "https://www.astro.org", label: "Astro", icon: astro },
+  { url: "https://github.com/taniarascia", label: "GitHub", icon: github },
+  { url: "https://www.netlify.com", label: "Netlify", icon: netlify },
+];
+---
+
+<footer class="footer">
+  <section class="footer-section">
+    <nav class="footer-menu">
+      {
+        links.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            key={link.url}
+            class="footer-link"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <nav class="footer-menu-buttons">
+      {
+        madeWithLinks.map((link) => (
+          <a
+            href={link.url}
+            title={link.label}
+            target="_blank"
+            rel="noopener noreferrer"
+            key={link.url}
+            class="button small"
+          >
+            <Image src={link.icon} alt={link.label} width="20px" height="20px" />
+            <span>{link.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+    <div class="footer-made-by">Made with ❤️ by Tania Rascia</div>
+  </section>
+</footer>

@@ -1,0 +1,36 @@
+---
+import Hero from '../components/Hero.astro'
+import Search from '../components/Search.astro'
+import PageLayout from '../layouts/PageLayout.astro'
+import Layout from '../layouts/Layout.astro'
+
+import blog from '../assets/nav-blog.png'
+
+const title = 'Notes'
+const description = 'Personal notes about life, music, projects, and everything else.'
+
+// Load all Markdown files
+const allPosts = Object.values(
+  import.meta.glob('./content/*.md', { eager: true })
+)
+
+// Filter posts where category is "Personal"
+const personalPosts = allPosts
+  .filter((post) => post.frontmatter?.categories === 'Technical')
+  .map((post) => {
+    return {
+    ...post,
+    title: post.frontmatter.title,
+    slug: post.frontmatter.slug,
+    date: post.frontmatter.date,
+  
+    }
+  })
+---
+
+<Layout>
+  <PageLayout>
+    <Hero title={title} description={description} hasSearch={true} image={blog} />
+    <Search data={personalPosts} section="notes" />
+  </PageLayout>
+</Layout>

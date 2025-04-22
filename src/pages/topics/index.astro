@@ -1,0 +1,67 @@
+---
+import { slugify } from "../../utils/helpers";
+import Layout from "../../Layouts/Layout.astro";
+import Hero from "../../components/Hero.astro";
+import PageLayout from "../../Layouts/PageLayout.astro";
+
+const title = "Topics";
+
+// Load all Markdown posts and extract tags
+const allPosts = Object.values(
+  await import.meta.glob("../content/*.md", { eager: true })
+);
+
+// Flatten all tags and count occurrences
+const tagMap = new Map();
+
+for (const post of allPosts) {
+  const tags = post.frontmatter?.tags ?? [];
+  for (const tag of tags) {
+    if (!tagMap.has(tag)) {
+      tagMap.set(tag, 1);
+    } else {
+      tagMap.set(tag, tagMap.get(tag) + 1);
+    }
+  }
+}
+
+// Convert to array of { name, totalCount }
+const tags = Array.from(tagMap.entries()).map(([name, totalCount]) => ({
+  name,
+  totalCount,
+}));
+
+// Group tags alphabetically by first letter
+const groupTags = tags.reduce((letterMap, tag) => {
+  const letter = tag.name.charAt(0).toUpperCase();
+  const current = letterMap[letter] || [];
+  return {
+    ...letterMap,
+    [letter]: [...current, tag],
+  };
+}, {});
+---
+
+<Layout>
+  <PageLayout>
+    <Hero title={title} />
+
+    {
+      Object.entries(groupTags)
+        .sort()
+        .map(([letter, tagList]) => (
+          <div class="alphabetical-tags" id={letter}>
+            <h3>{letter}</h3>
+            <div class="tags">
+              {tagList.map((tag) => (
+                <a href={`/topics/${slugify(tag.name)}`} class="button small">
+                  <span>{tag.name}</span>
+                  <span class="tag-count">{tag.totalCount}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))
+    }
+  </PageLayout>
+</Layout>

@@ -1,0 +1,19 @@
+---
+import Layout  from '../Layouts/Layout.astro'
+import Hero  from '../components/Hero.astro'
+import PageLayout  from '../Layouts/PageLayout.astro'
+import { projectsList } from '../data/projectsList.js'
+// import config from '../utils/config.js'
+import ProjectCards from '../components/ProjectCards.astro'
+
+const title = 'Projects'
+const description =
+  "Open-source projects I've made over the years, including this website, an emulator, and various games, apps, frameworks, and boilerplates."
+---
+
+<Layout>
+  <PageLayout>
+    <Hero title={title} description={description} />
+    <ProjectCards />
+  </PageLayout>
+</Layout>

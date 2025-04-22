@@ -1,0 +1,60 @@
+---
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import Sidebar from "../components/Sidebar.astro";
+// import Search from "astro-pagefind/components/Search";
+
+import "../styles/style.css";
+import "../styles/new-moon.css";
+import "../styles/dark-mode.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <script src="/pagefind/pagefind-ui.js" is:inline></script>
+    <title>Astro Rascia</title>
+    <script is:inline>
+      // Initialize theme on page load
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const html = document.documentElement;
+      
+      // Set color-scheme
+      html.style.setProperty('color-scheme', savedTheme);
+      
+      // Update class names
+      if (savedTheme === 'light') {
+        html.classList.add('is-light');
+        html.classList.remove('is-dark');
+      } else {
+        html.classList.add('is-dark');
+        html.classList.remove('is-light');
+      }
+    </script>
+  </head>
+  <body>
+    <div id="layout" class="layout">
+      <Navigation />
+      <!-- <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} /> -->
+
+      <Sidebar />
+      <div class="main-wrapper" id="introduction">
+        <div class="main-container">
+          <div id="search"></div>
+          <slot />
+        </div>
+        <Footer />
+      </div>
+    </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', (event) => {
+          new PagefindUI({ element: "#search", showSubResults: true });
+      });
+  </script>
+  </body>
+</html>
