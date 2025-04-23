@@ -23,6 +23,9 @@ const socialLinks = [
   { url: "https://github.com/taniarascia", svg: github },
   { url: "https://bsky.app/profile/tania.dev", svg: bsky },
 ];
+
+import Search3 from "../components/Search3.astro";
+
 ---
 
 <header class="navbar">
@@ -148,6 +151,7 @@ const socialLinks = [
               />
             ))
           }
+                
           <!-- {
             socialLinks.map((link) => (
               <a href={link.url} target="_blank" rel="noopener noreferrer" class="navbar-icon">
@@ -156,6 +160,7 @@ const socialLinks = [
             ))
           } -->
         </nav>
+        <Search3 />
       </section>
     </div>
   </div>
